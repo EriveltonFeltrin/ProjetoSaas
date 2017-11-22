@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjetoNuvem.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ProjetoNuvem.Controllers
 {
@@ -17,7 +18,8 @@ namespace ProjetoNuvem.Controllers
         // GET: Cliente
         public ActionResult Index()
         {
-            var clientes = db.Clientes.Include(c => c.Fornecedor);
+         
+            var clientes = db.Clientes.Where(c =>  c.Fornecedor.Email == User.Identity.Name);
             return View(clientes.ToList());
         }
 
@@ -39,7 +41,11 @@ namespace ProjetoNuvem.Controllers
         // GET: Cliente/Create
         public ActionResult Create()
         {
-            ViewBag.FornecedorId = new SelectList(db.Fornecedores, "Id", "Nome");
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.Email = User.Identity.GetUserName();
+
+            fornecedor = db.Fornecedores.FirstOrDefault(f => f.Email == fornecedor.Email);
+            ViewBag.FornecedorId = fornecedor.Id;
             return View();
         }
 
@@ -50,6 +56,11 @@ namespace ProjetoNuvem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Nome,Cpf,FornecedorId")] Cliente cliente)
         {
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.Email = User.Identity.GetUserName();
+
+            fornecedor = db.Fornecedores.FirstOrDefault(f => f.Email == fornecedor.Email);
+            cliente.FornecedorId = fornecedor.Id;
             if (ModelState.IsValid)
             {
                 db.Clientes.Add(cliente);
@@ -73,7 +84,11 @@ namespace ProjetoNuvem.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.FornecedorId = new SelectList(db.Fornecedores, "Id", "Nome", cliente.FornecedorId);
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.Email = User.Identity.GetUserName();
+
+            fornecedor = db.Fornecedores.FirstOrDefault(f => f.Email == fornecedor.Email);
+            ViewBag.FornecedorId = fornecedor.Id;
             return View(cliente);
         }
 
@@ -84,6 +99,11 @@ namespace ProjetoNuvem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Nome,Cpf,FornecedorId")] Cliente cliente)
         {
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.Email = User.Identity.GetUserName();
+
+            fornecedor = db.Fornecedores.FirstOrDefault(f => f.Email == fornecedor.Email);
+            cliente.FornecedorId = fornecedor.Id;
             if (ModelState.IsValid)
             {
                 db.Entry(cliente).State = EntityState.Modified;

@@ -373,6 +373,7 @@
     <Content Include="Views\Fornecedor\Details.cshtml" />
     <Content Include="Views\Fornecedor\Edit.cshtml" />
     <Content Include="Views\Fornecedor\Index.cshtml" />
+    <Content Include="Views\Home\PaginaInicial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

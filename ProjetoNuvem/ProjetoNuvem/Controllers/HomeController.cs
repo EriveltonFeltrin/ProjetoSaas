@@ -26,5 +26,12 @@ namespace ProjetoNuvem.Controllers
 
             return View();
         }
+        
+        public ActionResult PaginaInicial()
+        {
+            ViewBag.Message = User.Identity.Name;
+            ViewBag.Message1 = "Bem vindo";
+            return View();
+        }
     }
 }

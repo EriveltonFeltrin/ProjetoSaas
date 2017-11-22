@@ -48,11 +48,12 @@ namespace ProjetoNuvem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Nome,Cnpj,Email")] Fornecedor fornecedor)
         {
+            fornecedor.Email = User.Identity.Name;
             if (ModelState.IsValid)
-            {
+            { 
                 db.Fornecedores.Add(fornecedor);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("PaginaInicial", "Home");
             }
 
             return View(fornecedor);
