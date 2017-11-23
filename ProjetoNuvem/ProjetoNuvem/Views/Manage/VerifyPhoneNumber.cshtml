@@ -1,6 +1,6 @@
 ﻿@model ProjetoNuvem.Models.VerifyPhoneNumberViewModel
 @{
-    ViewBag.Title = "Verify Phone Number";
+    ViewBag.Title = "Verificar Número de Telefone";
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -9,7 +9,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.Hidden("phoneNumber", @Model.PhoneNumber)
-    <h4>Enter verification code</h4>
+    <h4>Digite o código de Verificação</h4>
     <h5>@ViewBag.Status</h5>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
