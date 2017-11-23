@@ -8,9 +8,8 @@
   <EntityContainer Name="BancoNuvemStoreContainer">
     <EntitySet Name="Fornecedores" EntityType="BancoNuvem.Store.Fornecedores" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Produtos" EntityType="BancoNuvem.Store.Produtos" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Clientes" EntityType="BancoNuvem.Store.Clientes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Pedidos" EntityType="BancoNuvem.Store.Pedidos" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ProdutoPedido" EntityType="BancoNuvem.Store.ProdutoPedido" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Clientes" EntityType="BancoNuvem.Store.Clientes" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FornecedorProduto" Association="BancoNuvem.Store.FornecedorProduto">
       <End Role="Fornecedor" EntitySet="Fornecedores" />
       <End Role="Produto" EntitySet="Produtos" />
@@ -19,17 +18,13 @@
       <End Role="Fornecedor" EntitySet="Fornecedores" />
       <End Role="Cliente" EntitySet="Clientes" />
     </AssociationSet>
+    <AssociationSet Name="ProdutoPedido" Association="BancoNuvem.Store.ProdutoPedido">
+      <End Role="Produto" EntitySet="Produtos" />
+      <End Role="Pedido" EntitySet="Pedidos" />
+    </AssociationSet>
     <AssociationSet Name="ClientePedido" Association="BancoNuvem.Store.ClientePedido">
       <End Role="Cliente" EntitySet="Clientes" />
       <End Role="Pedido" EntitySet="Pedidos" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProdutoPedido_Produto" Association="BancoNuvem.Store.FK_ProdutoPedido_Produto">
-      <End Role="Produto" EntitySet="Produtos" />
-      <End Role="ProdutoPedido" EntitySet="ProdutoPedido" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProdutoPedido_Pedido" Association="BancoNuvem.Store.FK_ProdutoPedido_Pedido">
-      <End Role="Pedido" EntitySet="Pedidos" />
-      <End Role="ProdutoPedido" EntitySet="ProdutoPedido" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Fornecedores">
@@ -51,6 +46,15 @@
     <Property Name="Quantidade" Type="nvarchar(max)" Nullable="false" />
     <Property Name="FornecedorId" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="Pedidos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Quantidade" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ProdutoId" Type="int" Nullable="false" />
+    <Property Name="ClienteId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Clientes">
     <Key>
       <PropertyRef Name="Id" />
@@ -59,21 +63,6 @@
     <Property Name="Nome" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Cpf" Type="nvarchar(max)" Nullable="false" />
     <Property Name="FornecedorId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Pedidos">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ClienteId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ProdutoPedido">
-    <Key>
-      <PropertyRef Name="Produto_Id" />
-      <PropertyRef Name="Pedido_Id" />
-    </Key>
-    <Property Name="Produto_Id" Type="int" Nullable="false" />
-    <Property Name="Pedido_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FornecedorProduto">
     <End Role="Fornecedor" Type="BancoNuvem.Store.Fornecedores" Multiplicity="1" />
@@ -99,6 +88,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="ProdutoPedido">
+    <End Role="Produto" Type="BancoNuvem.Store.Produtos" Multiplicity="1" />
+    <End Role="Pedido" Type="BancoNuvem.Store.Pedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Produto">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Pedido">
+        <PropertyRef Name="ProdutoId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="ClientePedido">
     <End Role="Cliente" Type="BancoNuvem.Store.Clientes" Multiplicity="1" />
     <End Role="Pedido" Type="BancoNuvem.Store.Pedidos" Multiplicity="*" />
@@ -111,53 +112,29 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProdutoPedido_Produto">
-    <End Role="Produto" Type="BancoNuvem.Store.Produtos" Multiplicity="1" />
-    <End Role="ProdutoPedido" Type="BancoNuvem.Store.ProdutoPedido" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Produto">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="ProdutoPedido">
-        <PropertyRef Name="Produto_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProdutoPedido_Pedido">
-    <End Role="ProdutoPedido" Type="BancoNuvem.Store.ProdutoPedido" Multiplicity="*" />
-    <End Role="Pedido" Type="BancoNuvem.Store.Pedidos" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="Pedido">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="ProdutoPedido">
-        <PropertyRef Name="Pedido_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="BancoNuvem" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
-        <EntityContainer Name="BancoNuvemContainer1" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="BancoNuvemContainer2" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Fornecedores" EntityType="BancoNuvem.Fornecedor" />
           <EntitySet Name="Produtos" EntityType="BancoNuvem.Produto" />
+          <EntitySet Name="Pedidos" EntityType="BancoNuvem.Pedido" />
+          <EntitySet Name="Clientes" EntityType="BancoNuvem.Cliente" />
           <AssociationSet Name="FornecedorProduto" Association="BancoNuvem.FornecedorProduto">
             <End Role="Fornecedor" EntitySet="Fornecedores" />
             <End Role="Produto" EntitySet="Produtos" />
           </AssociationSet>
-          <EntitySet Name="Clientes" EntityType="BancoNuvem.Cliente" />
           <AssociationSet Name="FornecedorCliente" Association="BancoNuvem.FornecedorCliente">
             <End Role="Fornecedor" EntitySet="Fornecedores" />
             <End Role="Cliente" EntitySet="Clientes" />
           </AssociationSet>
-          <EntitySet Name="Pedidos" EntityType="BancoNuvem.Pedido" />
-          <AssociationSet Name="ClientePedido" Association="BancoNuvem.ClientePedido">
-            <End Role="Cliente" EntitySet="Clientes" />
-            <End Role="Pedido" EntitySet="Pedidos" />
-          </AssociationSet>
           <AssociationSet Name="ProdutoPedido" Association="BancoNuvem.ProdutoPedido">
             <End Role="Produto" EntitySet="Produtos" />
+            <End Role="Pedido" EntitySet="Pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="ClientePedido" Association="BancoNuvem.ClientePedido">
+            <End Role="Cliente" EntitySet="Clientes" />
             <End Role="Pedido" EntitySet="Pedidos" />
           </AssociationSet>
         </EntityContainer>
@@ -184,6 +161,28 @@
           <Property Name="FornecedorId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Pedido" Relationship="BancoNuvem.ProdutoPedido" FromRole="Produto" ToRole="Pedido" />
         </EntityType>
+        <EntityType Name="Pedido">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quantidade" Type="String" Nullable="false" />
+          <NavigationProperty Name="Produto" Relationship="BancoNuvem.ProdutoPedido" FromRole="Pedido" ToRole="Produto" />
+          <Property Name="ProdutoId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Cliente" Relationship="BancoNuvem.ClientePedido" FromRole="Pedido" ToRole="Cliente" />
+          <Property Name="ClienteId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" />
+          <Property Name="Cpf" Type="String" Nullable="false" />
+          <NavigationProperty Name="Fornecedor" Relationship="BancoNuvem.FornecedorCliente" FromRole="Cliente" ToRole="Fornecedor" />
+          <Property Name="FornecedorId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Pedido" Relationship="BancoNuvem.ClientePedido" FromRole="Cliente" ToRole="Pedido" />
+        </EntityType>
         <Association Name="FornecedorProduto">
           <End Type="BancoNuvem.Fornecedor" Role="Fornecedor" Multiplicity="1" />
           <End Type="BancoNuvem.Produto" Role="Produto" Multiplicity="*" />
@@ -196,17 +195,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Cliente">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nome" Type="String" Nullable="false" />
-          <Property Name="Cpf" Type="String" Nullable="false" />
-          <NavigationProperty Name="Fornecedor" Relationship="BancoNuvem.FornecedorCliente" FromRole="Cliente" ToRole="Fornecedor" />
-          <Property Name="FornecedorId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Pedido" Relationship="BancoNuvem.ClientePedido" FromRole="Cliente" ToRole="Pedido" />
-        </EntityType>
         <Association Name="FornecedorCliente">
           <End Type="BancoNuvem.Fornecedor" Role="Fornecedor" Multiplicity="1" />
           <End Type="BancoNuvem.Cliente" Role="Cliente" Multiplicity="*" />
@@ -219,15 +207,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Pedido">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Cliente" Relationship="BancoNuvem.ClientePedido" FromRole="Pedido" ToRole="Cliente" />
-          <Property Name="ClienteId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Produto" Relationship="BancoNuvem.ProdutoPedido" FromRole="Pedido" ToRole="Produto" />
-        </EntityType>
+        <Association Name="ProdutoPedido">
+          <End Type="BancoNuvem.Produto" Role="Produto" Multiplicity="1" />
+          <End Type="BancoNuvem.Pedido" Role="Pedido" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Pedido">
+              <PropertyRef Name="ProdutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="ClientePedido">
           <End Type="BancoNuvem.Cliente" Role="Cliente" Multiplicity="1" />
           <End Type="BancoNuvem.Pedido" Role="Pedido" Multiplicity="*" />
@@ -240,16 +231,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ProdutoPedido">
-          <End Type="BancoNuvem.Produto" Role="Produto" Multiplicity="*" />
-          <End Type="BancoNuvem.Pedido" Role="Pedido" Multiplicity="*" />
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="BancoNuvemStoreContainer" CdmEntityContainer="BancoNuvemContainer1">
+  <EntityContainerMapping StorageEntityContainer="BancoNuvemStoreContainer" CdmEntityContainer="BancoNuvemContainer2">
     <EntitySetMapping Name="Fornecedores">
       <EntityTypeMapping TypeName="IsTypeOf(BancoNuvem.Fornecedor)">
         <MappingFragment StoreEntitySet="Fornecedores">
@@ -271,6 +258,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Pedidos">
+      <EntityTypeMapping TypeName="IsTypeOf(BancoNuvem.Pedido)">
+        <MappingFragment StoreEntitySet="Pedidos">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Quantidade" ColumnName="Quantidade" />
+          <ScalarProperty Name="ProdutoId" ColumnName="ProdutoId" />
+          <ScalarProperty Name="ClienteId" ColumnName="ClienteId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Clientes">
       <EntityTypeMapping TypeName="IsTypeOf(BancoNuvem.Cliente)">
         <MappingFragment StoreEntitySet="Clientes">
@@ -281,22 +278,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Pedidos">
-      <EntityTypeMapping TypeName="IsTypeOf(BancoNuvem.Pedido)">
-        <MappingFragment StoreEntitySet="Pedidos">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="ClienteId" ColumnName="ClienteId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <AssociationSetMapping Name="ProdutoPedido" TypeName="BancoNuvem.ProdutoPedido" StoreEntitySet="ProdutoPedido">
-      <EndProperty Name="Produto">
-        <ScalarProperty Name="Id" ColumnName="Produto_Id" />
-      </EndProperty>
-      <EndProperty Name="Pedido">
-        <ScalarProperty Name="Id" ColumnName="Pedido_Id" />
-      </EndProperty>
-    </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

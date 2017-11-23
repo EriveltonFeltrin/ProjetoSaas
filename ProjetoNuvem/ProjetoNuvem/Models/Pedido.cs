@@ -14,17 +14,12 @@ namespace ProjetoNuvem.Models
     
     public partial class Pedido
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Pedido()
-        {
-            this.Produto = new HashSet<Produto>();
-        }
-    
         public int Id { get; set; }
+        public string Quantidade { get; set; }
+        public int ProdutoId { get; set; }
         public int ClienteId { get; set; }
     
+        public virtual Produto Produto { get; set; }
         public virtual Cliente Cliente { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Produto> Produto { get; set; }
     }
 }

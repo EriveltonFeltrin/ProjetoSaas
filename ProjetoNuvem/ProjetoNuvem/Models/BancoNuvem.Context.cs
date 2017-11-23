@@ -13,10 +13,10 @@ namespace ProjetoNuvem.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class BancoNuvemContainer1 : DbContext
+    public partial class BancoNuvemContainer2 : DbContext
     {
-        public BancoNuvemContainer1()
-            : base("name=BancoNuvemContainer1")
+        public BancoNuvemContainer2()
+            : base("name=BancoNuvemContainer2")
         {
         }
     
@@ -27,7 +27,7 @@ namespace ProjetoNuvem.Models
     
         public virtual DbSet<Fornecedor> Fornecedores { get; set; }
         public virtual DbSet<Produto> Produtos { get; set; }
-        public virtual DbSet<Cliente> Clientes { get; set; }
         public virtual DbSet<Pedido> Pedidos { get; set; }
+        public virtual DbSet<Cliente> Clientes { get; set; }
     }
 }

@@ -4,15 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5b781f232af246fbb645f91c8a5dbfa4" Name="Diagram1" >
-        <EntityTypeShape EntityType="BancoNuvem.Fornecedor" Width="1.5" PointX="2.125" PointY="0.5" />
-        <EntityTypeShape EntityType="BancoNuvem.Produto" Width="1.5" PointX="5" PointY="0.5" />
+      <Diagram DiagramId="88b4b8c6185f4f99a0fe22f57554c1fc" Name="Diagram1" >
+        <EntityTypeShape EntityType="BancoNuvem.Fornecedor" Width="1.5" PointX="6.125" PointY="1" />
+        <EntityTypeShape EntityType="BancoNuvem.Produto" Width="1.5" PointX="8.875" PointY="0.875" />
+        <EntityTypeShape EntityType="BancoNuvem.Pedido" Width="1.5" PointX="8.875" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BancoNuvem.Cliente" Width="1.5" PointX="6.25" PointY="3.625" />
         <AssociationConnector Association="BancoNuvem.FornecedorProduto" />
-        <EntityTypeShape EntityType="BancoNuvem.Cliente" Width="1.5" PointX="2.125" PointY="3.25" />
         <AssociationConnector Association="BancoNuvem.FornecedorCliente" />
-        <EntityTypeShape EntityType="BancoNuvem.Pedido" Width="1.5" PointX="5" PointY="3.375" />
-        <AssociationConnector Association="BancoNuvem.ClientePedido" />
         <AssociationConnector Association="BancoNuvem.ProdutoPedido" />
+        <AssociationConnector Association="BancoNuvem.ClientePedido" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -7,17 +7,18 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ProjetoNuvem.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ProjetoNuvem.Controllers
 {
     public class PedidoController : Controller
     {
-        private BancoNuvemContainer1 db = new BancoNuvemContainer1();
+        private BancoNuvemContainer2 db = new BancoNuvemContainer2();
 
         // GET: Pedido
         public ActionResult Index()
         {
-            var pedidos = db.Pedidos.Include(p => p.Cliente);
+            var pedidos = db.Pedidos.Include(p => p.Produto).Include(p => p.Cliente);
             return View(pedidos.ToList());
         }
 
@@ -39,7 +40,12 @@ namespace ProjetoNuvem.Controllers
         // GET: Pedido/Create
         public ActionResult Create()
         {
-            ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "Nome");
+            Fornecedor fornecedor = new Fornecedor();
+            fornecedor.Email = User.Identity.GetUserName();
+            fornecedor = db.Fornecedores.FirstOrDefault(f => f.Email == fornecedor.Email);
+
+            ViewBag.ProdutoId = new SelectList(db.Produtos.Where(x => x.FornecedorId == fornecedor.Id), "Id", "Nome");
+            ViewBag.ClienteId = new SelectList(db.Clientes.Where(x => x.FornecedorId == fornecedor.Id), "Id", "Nome");
             return View();
         }
 
@@ -48,7 +54,7 @@ namespace ProjetoNuvem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ClienteId")] Pedido pedido)
+        public ActionResult Create([Bind(Include = "Id,Quantidade,ProdutoId,ClienteId")] Pedido pedido)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +63,7 @@ namespace ProjetoNuvem.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.ProdutoId = new SelectList(db.Produtos, "Id", "Nome", pedido.ProdutoId);
             ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "Nome", pedido.ClienteId);
             return View(pedido);
         }
@@ -73,6 +80,7 @@ namespace ProjetoNuvem.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ProdutoId = new SelectList(db.Produtos, "Id", "Nome", pedido.ProdutoId);
             ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "Nome", pedido.ClienteId);
             return View(pedido);
         }
@@ -82,7 +90,7 @@ namespace ProjetoNuvem.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ClienteId")] Pedido pedido)
+        public ActionResult Edit([Bind(Include = "Id,Quantidade,ProdutoId,ClienteId")] Pedido pedido)
         {
             if (ModelState.IsValid)
             {
@@ -90,6 +98,7 @@ namespace ProjetoNuvem.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ProdutoId = new SelectList(db.Produtos, "Id", "Nome", pedido.ProdutoId);
             ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "Nome", pedido.ClienteId);
             return View(pedido);
         }

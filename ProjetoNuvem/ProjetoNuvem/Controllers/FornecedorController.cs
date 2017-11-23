@@ -12,7 +12,7 @@ namespace ProjetoNuvem.Controllers
 {
     public class FornecedorController : Controller
     {
-        private BancoNuvemContainer1 db = new BancoNuvemContainer1();
+        private BancoNuvemContainer2 db = new BancoNuvemContainer2();
 
         // GET: Fornecedor
         public ActionResult Index()

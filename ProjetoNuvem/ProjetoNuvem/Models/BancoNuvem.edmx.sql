@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/20/2017 13:58:48
+-- Date Created: 11/23/2017 20:35:33
 -- Generated from EDMX file: C:\Users\Erivelton Feltrin\Source\Repos\ProjetoSaas\ProjetoNuvem\ProjetoNuvem\Models\BancoNuvem.edmx
 -- --------------------------------------------------
 
@@ -46,26 +46,21 @@ CREATE TABLE [dbo].[Produtos] (
 );
 GO
 
+-- Creating table 'Pedidos'
+CREATE TABLE [dbo].[Pedidos] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Quantidade] nvarchar(max)  NOT NULL,
+    [ProdutoId] int  NOT NULL,
+    [ClienteId] int  NOT NULL
+);
+GO
+
 -- Creating table 'Clientes'
 CREATE TABLE [dbo].[Clientes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Nome] nvarchar(max)  NOT NULL,
     [Cpf] nvarchar(max)  NOT NULL,
     [FornecedorId] int  NOT NULL
-);
-GO
-
--- Creating table 'Pedidos'
-CREATE TABLE [dbo].[Pedidos] (
-    [Id] int IDENTITY(1,1) NOT NULL,
-    [ClienteId] int  NOT NULL
-);
-GO
-
--- Creating table 'ProdutoPedido'
-CREATE TABLE [dbo].[ProdutoPedido] (
-    [Produto_Id] int  NOT NULL,
-    [Pedido_Id] int  NOT NULL
 );
 GO
 
@@ -85,22 +80,16 @@ ADD CONSTRAINT [PK_Produtos]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'Clientes'
-ALTER TABLE [dbo].[Clientes]
-ADD CONSTRAINT [PK_Clientes]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
 -- Creating primary key on [Id] in table 'Pedidos'
 ALTER TABLE [dbo].[Pedidos]
 ADD CONSTRAINT [PK_Pedidos]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Produto_Id], [Pedido_Id] in table 'ProdutoPedido'
-ALTER TABLE [dbo].[ProdutoPedido]
-ADD CONSTRAINT [PK_ProdutoPedido]
-    PRIMARY KEY CLUSTERED ([Produto_Id], [Pedido_Id] ASC);
+-- Creating primary key on [Id] in table 'Clientes'
+ALTER TABLE [dbo].[Clientes]
+ADD CONSTRAINT [PK_Clientes]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -137,6 +126,21 @@ ON [dbo].[Clientes]
     ([FornecedorId]);
 GO
 
+-- Creating foreign key on [ProdutoId] in table 'Pedidos'
+ALTER TABLE [dbo].[Pedidos]
+ADD CONSTRAINT [FK_ProdutoPedido]
+    FOREIGN KEY ([ProdutoId])
+    REFERENCES [dbo].[Produtos]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ProdutoPedido'
+CREATE INDEX [IX_FK_ProdutoPedido]
+ON [dbo].[Pedidos]
+    ([ProdutoId]);
+GO
+
 -- Creating foreign key on [ClienteId] in table 'Pedidos'
 ALTER TABLE [dbo].[Pedidos]
 ADD CONSTRAINT [FK_ClientePedido]
@@ -150,30 +154,6 @@ GO
 CREATE INDEX [IX_FK_ClientePedido]
 ON [dbo].[Pedidos]
     ([ClienteId]);
-GO
-
--- Creating foreign key on [Produto_Id] in table 'ProdutoPedido'
-ALTER TABLE [dbo].[ProdutoPedido]
-ADD CONSTRAINT [FK_ProdutoPedido_Produto]
-    FOREIGN KEY ([Produto_Id])
-    REFERENCES [dbo].[Produtos]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Pedido_Id] in table 'ProdutoPedido'
-ALTER TABLE [dbo].[ProdutoPedido]
-ADD CONSTRAINT [FK_ProdutoPedido_Pedido]
-    FOREIGN KEY ([Pedido_Id])
-    REFERENCES [dbo].[Pedidos]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ProdutoPedido_Pedido'
-CREATE INDEX [IX_FK_ProdutoPedido_Pedido]
-ON [dbo].[ProdutoPedido]
-    ([Pedido_Id]);
 GO
 
 -- --------------------------------------------------
